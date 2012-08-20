@@ -3,7 +3,7 @@
 /*
 // Name:    reCaptcha API Wrapper
 // File:    class.recaptcha.php
-// Version: 1.1
+// Version: 1.0
 // 
 // Author:  Simon Brown <simon@clanbug.com>
 // Licence: DWTFYWPL v2
@@ -53,17 +53,15 @@ class reCaptcha {
 	private $challenge;
 	private $response;
 
-	private $protocol	= 'https:';
-	private $verifyURL	= '//google.com/recaptcha/api/verify';
+	private $verifyURL = 'http://www.google.com/recaptcha/api/verify';
 
-	public function __construct($privateKey, $useSSL = true){
+	public function __construct($privateKey, $remoteHost = null){
 
 		$this->privateKey = $privateKey;
 		$this->remoteHost = $_SERVER['REMOTE_ADDR'];
 
-		if($useSSL === false)
-			$this->protocol = 'http:';
-
+		if(!is_null($remoteHost))
+			$this->remoteHost = $remoteHost;
 
 	}
 
@@ -119,7 +117,7 @@ class reCaptcha {
 
 		$ch = curl_init();
 
-		curl_setopt($ch, CURLOPT_URL, $this->protocol.$this->verifyURL);
+		curl_setopt($ch, CURLOPT_URL, $this->verifyURL);
 		curl_setopt($ch, CURLOPT_POST, count($package));
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $packageString);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
